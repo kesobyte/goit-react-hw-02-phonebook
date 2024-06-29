@@ -14,6 +14,26 @@ export class App extends Component {
     filter: '',
   };
 
+  // This is invoked after a component has been rendered to the DOM
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+
+    if (savedContacts !== null) {
+      this.setState({ contacts: JSON.parse(savedContacts) });
+    }
+  }
+
+  // This is called after a component is updated
+  // Put underscore on the _prevProps, so the it will be viewed as consumed
+  componentDidUpdate(_prevProps, prevState) {
+    // if 'contacts' state is updated, set value to localStorage
+    const { contacts } = this.state;
+
+    if (contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+  }
+
   addContact = newContact => {
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
